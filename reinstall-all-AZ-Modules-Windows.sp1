@@ -1,0 +1,60 @@
+# --- Uninstall all Az modules (all versions) ---
+Write-Host "Uninstalling all installed Az modules..."
+
+try {
+    $installedAzModules = @(Get-InstalledModule | Where-Object { $_.Name -like "Az*" })
+
+    foreach ($mod in $installedAzModules) {
+        $allVersions = Get-InstalledModule -Name $mod.Name -AllVersions -ErrorAction SilentlyContinue
+        foreach ($versionedMod in $allVersions) {
+            Write-Host "Removing $($versionedMod.Name) version $($versionedMod.Version)"
+            Uninstall-Module -Name $versionedMod.Name -RequiredVersion $versionedMod.Version -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+catch {
+    Write-Warning "Warning: Error occurred while uninstalling modules: $_"
+}
+
+# --- Remove leftover module folders in user profile ---
+$userModulesPath = "$env:USERPROFILE\Documents\WindowsPowerShell\Modules\Az*"
+if (Test-Path $userModulesPath) {
+    Write-Host "Removing leftover user module folders..."
+    Remove-Item -Recurse -Force $userModulesPath -ErrorAction SilentlyContinue
+}
+
+# --- Remove leftover module folders in program files (requires admin) ---
+$programModulesPath = "C:\Program Files\WindowsPowerShell\Modules\Az*"
+if (Test-Path $programModulesPath) {
+    Write-Host "Removing leftover program files module folders..."
+    try {
+        Remove-Item -Recurse -Force $programModulesPath -ErrorAction SilentlyContinue
+    }
+    catch {
+        Write-Warning "Could not remove program files Az modules. Run PowerShell as admin to remove these manually."
+    }
+}
+
+# --- Restart VS Code manually here before continuing! ---
+Write-Host "`nPlease restart VS Code to clear any cached module state. Press Enter to continue after restart."
+Read-Host
+
+# --- Reinstall Az module for current user ---
+Write-Host "Installing Az module for CurrentUser scope..."
+try {
+    Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force -AllowClobber
+}
+catch {
+    Write-Error "Failed to install Az module: $_"
+    exit 1
+}
+
+# --- Test login ---
+Write-Host "`nTesting Connect-AzAccount..."
+try {
+    Connect-AzAccount -ErrorAction Stop
+    Write-Host "Login successful!" -ForegroundColor Green
+}
+catch {
+    Write-Error "Login failed: $_"
+}
