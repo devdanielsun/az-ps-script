@@ -10,7 +10,6 @@ try {
 $targetNames = @("YOUR-SUBSCRIPTION-NAME", "ANOTHER-SUBSCRIPTION-NAME")
 
 # Get target subscriptions
-
 $subscriptions = Get-AzSubscription | Where-Object {
     $_.Name -in $targetNames -and $_.State -eq "Enabled"
 }
@@ -43,7 +42,7 @@ foreach ($subscription in $subscriptions) {
                 }
                 $expiryFormatted = $null
                 if ($expiry) {
-                    $expiryFormatted = $expiry.ToLocalTime().ToString('dd-MM-yyyy HH:mm:ss')
+                    $expiryFormatted = $expiry.ToLocalTime().ToString('yyyy-MM-dd HH:mm:ss')
                 }
                 $data += [PSCustomObject]@{
                     SubscriptionName = $subscription.Name
@@ -71,7 +70,7 @@ foreach ($subscription in $subscriptions) {
                 }
                 $expiryFormatted = $null
                 if ($expiry) {
-                    $expiryFormatted = $expiry.ToLocalTime().ToString('dd-MM-yyyy HH:mm:ss')
+                    $expiryFormatted = $expiry.ToLocalTime().ToString('yyyy-MM-dd HH:mm:ss')
                 }
                 $data += [PSCustomObject]@{
                     SubscriptionName = $subscription.Name
@@ -99,7 +98,7 @@ foreach ($subscription in $subscriptions) {
                 }
                 $expiryFormatted = $null
                 if ($expiry) {
-                    $expiryFormatted = $expiry.ToLocalTime().ToString('dd-MM-yyyy HH:mm:ss')
+                    $expiryFormatted = $expiry.ToLocalTime().ToString('yyyy-MM-dd HH:mm:ss')
                 }
                 $data += [PSCustomObject]@{
                     SubscriptionName = $subscription.Name
