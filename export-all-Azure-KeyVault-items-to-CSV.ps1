@@ -14,10 +14,10 @@
     Expiry dates are in UTC.
 
 .PARAMETER TenantId
-    The Azure AD tenant ID to authenticate against. Defaults to the VWH tenant.
+    The Azure AD tenant ID to authenticate against.
 
 .PARAMETER TargetSubscriptionNames
-    List of subscription display names to include. Defaults to the standard VWH and TOL MANAGEMENT subscriptions.
+    List of subscription display names to include.
 
 .PARAMETER ExportPath
     Full path of the output CSV file. Defaults to keyvault_inventory_all_subs.csv in the current user's Documents folder.
